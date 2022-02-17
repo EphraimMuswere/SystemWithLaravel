@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Payment;
+use Illuminate\Support\Facades\Auth;
 
 class PaymentsController extends Controller
 {
@@ -14,11 +15,10 @@ class PaymentsController extends Controller
      */
     public function index()
     {
-        return view('payment.index', [
-            'payments'=>Guitar::all(),
-            //'payments'=> self::getData(),
-            'userInput'=>'<script>alert("hello")</script>'
-        ]);
+        //get all payments and display them
+        $payments = Payment::all();
+        return view('payment.index', ['payments'=> $payments]);
+
     }
 
     /**
@@ -28,7 +28,7 @@ class PaymentsController extends Controller
      */
     public function create()
     {
-        return view('payment'); 
+        return view('payment');
     }
 
     /**
@@ -39,30 +39,24 @@ class PaymentsController extends Controller
      */
     public function store(Request $request)
     {
-        //
 
-        $request->validate([
+        //validate input
+       $validated =  $request->validate([
+            'user_id' => 'integer',
             'date'=>'required',
             'amount_in_words'=> 'required',
             'department'=> 'required' ,
             'payable_to'=> 'required',
             'discription'=> 'required',
-            'initiated_by'=> 'required',
-            'amount_in_figures'=>['required', 'integer'],
+            'amount_in_figures'=>'required|integer',
         ]);
         $payment = new Payment();
-        $payment->date = $request->input('date');
-        $payment->amount_in_words = $request->input('amount_in_words');
-        $payment->amount_in_figures = $request->input('amount_in_words');
-        $payment->payable_to = $request->input('full_name');
-        $payment->discription = $request->input('discription');
-        $payment->initiated_by = $request->input('initiated_by');
-        $payment->department = $request->input('department');
-
+        $payment->fill($validated);
+        $payment->user_id = Auth::id();
         $payment->save();
-        
+
         return redirect()->route('home.index');
-        
+
     }
 
     /**

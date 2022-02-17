@@ -23,7 +23,7 @@ class CreatePaymentsTable extends Migration
             $table->string('payable_to');
             $table->string('discription');
             $table->string('department');
-            $table->longText('document_name');
+            $table->longText('document_path');
             //referencing user table to make user_id a foreign key
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->softDeletes();

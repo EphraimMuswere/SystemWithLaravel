@@ -44,5 +44,9 @@ class User extends Authenticatable
     ];
 
 
-    //add relationship with payments
+    //define relationship with other models
+    //add relationship with payments model
+    public function payments(){
+        return $this->hasMany(Payment::class);
+    }
 }
