@@ -15,14 +15,18 @@ class CreatePaymentsTable extends Migration
     {
         Schema::create('payments', function (Blueprint $table) {
             $table->id();
-            $table->string ('date');
-            $table->string ('amount_in_words');
-            $table->integer ('amount_in_figures');
-            $table->string ('payable_to');
-            $table->string ('discription');
-            $table->string ('initiated_by');
-            $table->string ('department');
-            $table->string ('document_name');
+            // user id as a foreign key
+            $table->unsignedBigInteger('user_id');
+            $table->string('date');
+            $table->string('amount_in_words');
+            $table->integer('amount_in_figures');
+            $table->string('payable_to');
+            $table->string('discription');
+            $table->string('department');
+            $table->longText('document_name');
+            //referencing user table to make user_id a foreign key
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->softDeletes();
             $table->timestamps();
         });
     }
